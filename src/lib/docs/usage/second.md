@@ -8,7 +8,7 @@ You can also change the number of inputs through the `numOfInputs` prop.
 
 ```js
 <script>
-	import SvelteOtp from ‘@kferjani/svelte-num-otp’;
+	import SvelteOtp from ‘svelte-num-otp’;
 
     let value = '12345'
 

@@ -1,5 +1,5 @@
 {
-	"name": "@kferjani/svelte-num-otp",
+	"name": "svelte-num-otp",
 	"version": "0.1.0",
 	"license": "MIT",
 	"private": false,
@@ -14,7 +14,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/rezk2ll/svelte-num-otp"
+		"url": "git+https://github.com/rezk2ll/svelte-num-otp.git"
 	},
 	"svelte": "./dist/components/SvelteOtp.svelte",
 	"scripts": {

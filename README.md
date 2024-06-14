@@ -9,13 +9,13 @@ A simple lightweight numbers OTP input component for svelte.
 # Installing
 
 ```
-npm install @kferjani/svelte-num-otp
+npm install svelte-num-otp
 ```
 
 or
 
 ```
-yarn add @kferjani/svelte-num-otp
+yarn add svelte-num-otp
 ```
 
 <br/>
@@ -31,7 +31,7 @@ Getting started is as easy as importing the `SvelteOtp` component and just using
 
 ```js
 <script>
-    import SvelteOtp from ‘@kferjani/svelte-num-otp’;
+    import SvelteOtp from ‘svelte-num-otp’;
 </script>
 
 <SvelteOtp />
@@ -47,9 +47,9 @@ You can also change the number of inputs through the `numOfInputs` prop.
 
 ```js
 <script>
-	import SvelteOtp from ‘@kferjani/svelte-num-otp’;
+	import SvelteOtp from ‘svelte-num-otp’;
 
-    let value = 'abc12'
+    let value = '12345'
 
 </script>
 

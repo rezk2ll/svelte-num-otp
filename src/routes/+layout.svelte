@@ -24,7 +24,7 @@
 			</svg>
 		</a>
 		<a
-			href="https://www.npmjs.com/package/@kferjani/svelte-num-otp"
+			href="https://www.npmjs.com/package/svelte-num-otp"
 			target="_blank"
 			rel="noreferrer"
 		>
