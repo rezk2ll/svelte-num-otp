@@ -1,22 +1,21 @@
 # svelte-otp
 
-A simple lightweight OTP input component for svelte.
+A simple lightweight numbers OTP input component for svelte.
 
-- [Documentation](https://k4ung-svelte-otp.netlify.app/usage)
-- [Playground](https://k4ung-svelte-otp.netlify.app/playground)
+[original project](https://github.com/K4UNG/svelte-otp)
 
 <br/>
 
 # Installing
 
 ```
-npm install @k4ung/svelte-otp
+npm install @kferjani/svelte-num-otp
 ```
 
 or
 
 ```
-yarn add @k4ung/svelte-otp
+yarn add @kferjani/svelte-num-otp
 ```
 
 <br/>
@@ -32,7 +31,7 @@ Getting started is as easy as importing the `SvelteOtp` component and just using
 
 ```js
 <script>
-    import SvelteOtp from ‘@k4ung/svelte-otp’;
+    import SvelteOtp from ‘@kferjani/svelte-num-otp’;
 </script>
 
 <SvelteOtp />
@@ -48,34 +47,13 @@ You can also change the number of inputs through the `numOfInputs` prop.
 
 ```js
 <script>
-	import SvelteOtp from ‘@k4ung/svelte-otp’;
+	import SvelteOtp from ‘@kferjani/svelte-num-otp’;
 
     let value = 'abc12'
 
 </script>
 
 <SvelteOtp numOfInputs={5} bind:value />
-```
-
-You can also restrict it to only accept numbers by adding the `numberOnly` attribute.
-
-Separators can be set through the `separator` prop. Placeholders can be added through `placeholder` prop.
-
-<br/>
-
-```js
-<script>
-    import SvelteOtp from ‘@k4ung/svelte-otp’;
-
-    let value = '12';
-</script>
-
-<SvelteOtp
-    numberOnly
-    bind:value
-    separator="-"
-    placeholder="********"
-/>
 ```
 
 ## Customizing the look
@@ -101,7 +79,6 @@ Here's an example component, styled using [tailwindcss](https://tailwindcss.com/
 | separator               | ''                | Separator between the individual inputs                     |
 | onlyShowMiddleSeparator | false             | Only show one separator in the middle (numOfInputs % 2 = 0) |
 | placeholder             | ''                | Placeholder value for the inputs                            |
-| numberOnly              | false             | Restrict the values to numbers only                         |
 | disableDefaultStyle     | false             | Disable default styling of component                        |
 | wrapperClass            | ''                | Custom class to be added to the wrapper element             |
 | inputClass              | ''                | Custom class to be added to the individual inputs           |

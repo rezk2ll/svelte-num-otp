@@ -1,9 +1,8 @@
 {
-	"name": "@k4ung/svelte-otp",
+	"name": "@kferjani/svelte-num-otp",
 	"version": "0.0.9",
 	"license": "MIT",
 	"private": false,
-	"homepage": "https://k4ung-svelte-otp.netlify.app/usage",
 	"files": [
 		"dist"
 	],
@@ -15,7 +14,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/K4UNG/svelte-otp"
+		"url": "https://github.com/kferjani/svelte-num-otp"
 	},
 	"svelte": "./dist/components/SvelteOtp.svelte",
 	"scripts": {
