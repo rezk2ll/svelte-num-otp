@@ -2,7 +2,7 @@
 	import { afterUpdate } from 'svelte';
 	import OtpItem from './OtpItem.svelte';
 
-	export let numOfInputs: number = 6;
+	export let numOfInputs = 6;
 	export let value = '';
 	export let separator = '';
 	export let disableDefaultStyle = false;
@@ -12,7 +12,6 @@
 	export let inputStyle = '';
 	export let wrapperStyle = '';
 	export let separatorStyle = '';
-	export let numberOnly = false;
 	export let placeholder = '';
 	export let onlyShowMiddleSeparator = false;
 
@@ -40,7 +39,6 @@
 <div class={`${disableDefaultStyle ? '' : 'wrapper'} ${wrapperClass}`} style={wrapperStyle}>
 	{#each codes as value, i (i)}
 		<OtpItem
-			num={numberOnly}
 			bind:input={inputs[i]}
 			bind:value
 			index={i}

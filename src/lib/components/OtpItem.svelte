@@ -6,92 +6,110 @@
 	export let inputs: (null | HTMLInputElement)[];
 	export let nostyle: boolean;
 	export let className: string;
-	export let num: boolean;
 	export let style: string;
 	export let placeholder: string;
 
-	let key: string;
-
-	function shiftFocus(key: string) {
-		if (
-			(!/[0-9]/.test(key) && num && key) ||
-			key === 'ArrowRight' ||
-			key === 'ArrowLeft' ||
-			key === 'Backspace'
-		)
-			return;
-		if (value === ' ') {
-			value = '';
-			return;
-		}
-		if (index !== inputs.length - 1) (inputs[index + 1] as HTMLInputElement).focus();
-	}
-
-	function keyDownHandler(e: KeyboardEvent) {
-		if (e.ctrlKey && e.key === 'z') {
-			e.preventDefault();
-		}
-		key = e.key;
-		if (value.length >= 1 && !e.ctrlKey) shiftFocus(key);
-	}
-
-	function typeHandler(e: KeyboardEvent) {
-		if (value.length >= 1 || (!/[0-9]/.test(e.key) && num)) {
-			e.preventDefault();
-		}
-	}
-
-	function changeHandler(e: Event) {
-		const val = (e.target as HTMLInputElement).value;
-		if (/[0-9]/.test(val) || !num || !val) {
-			codes = codes.map((c, i) => {
-				if (i < index) {
-					return c === '' ? ' ' : c;
-				} else if (i === index) {
-					return val[0];
-				}
-				return c;
-			});
-			// value = val[0];
-			if (!val) {
-				const len = codes.length;
-				const filtered = codes.filter((_, i) => i !== index);
-				codes = [...filtered, ...Array(len - filtered.length).fill('')];
+	function shiftFocus(forward = true) {
+		if (forward) {
+			if (index < inputs.length - 1) {
+				(inputs[index + 1] as HTMLInputElement).focus();
 			}
-			shiftFocus(key);
+		} else {
+			if (index > 0) {
+				(inputs[index - 1] as HTMLInputElement).focus();
+			}
 		}
 	}
 
-	function keyUpHandler(e: KeyboardEvent) {
-		if ((e.key === 'Backspace' || e.key === 'ArrowLeft') && index !== 0) {
-			inputs[index - 1]?.focus();
-		} else if (e.key === 'ArrowRight' && index !== inputs.length - 1) {
-			inputs[index + 1]?.focus();
+	function handleKeyDown(event: KeyboardEvent) {
+		if (event.ctrlKey && event.key === 'z') {
+			event.preventDefault();
+		}
+
+		if (event.key === 'ArrowRight' && index < inputs.length - 1) {
+			(inputs[index + 1] as HTMLInputElement).focus();
+		} else if (event.key === 'ArrowLeft' && index > 0) {
+			(inputs[index - 1] as HTMLInputElement).focus();
+		} else if (event.key === 'Backspace' && value === '') {
+			shiftFocus(false);
 		}
 	}
 
-	function pasteHandler(e: ClipboardEvent) {
-		e.preventDefault();
-		const paste = e.clipboardData?.getData('text');
+	function handleInput(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const inputValue = target.value.replace(/[^0-9]/g, '');
+
+		if (target.value !== inputValue) {
+			target.value = inputValue;
+		}
+
+		if (inputValue.length > 0) {
+			codes = codes.map((code, i) => {
+				if (i < index) {
+					return code === '' ? ' ' : code;
+				} else if (i === index) {
+					return inputValue[0];
+				}
+				return code;
+			});
+
+			if (inputValue.length >= 1) {
+				shiftFocus();
+			}
+		}
+
+		if (!inputValue) {
+			const length = codes.length;
+			const filteredCodes = codes.filter((_, i) => i !== index);
+			codes = [...filteredCodes, ...Array(length - filteredCodes.length).fill('')];
+		}
+
+		if (index === inputs.length - 1 && inputValue.length > 1) {
+			target.value = inputValue[0];
+		}
+	}
+
+	function handlePaste(event: ClipboardEvent) {
+		event.preventDefault();
+		const paste = event.clipboardData?.getData('text');
 		if (!paste) return;
-		let pasteValue = paste.replace(num ? /[^0-9]/g : '', '').slice(0, codes.length - index);
-		const newCodes = [
-			...codes.slice(0, index),
-			...pasteValue.split(''),
-			...codes.slice(index + pasteValue.length)
-		];
-		codes = newCodes;
+
+		const numericPasteValue = paste.replace(/[^0-9]/g, '').slice(0, codes.length - index);
+		const updatedCodes = [...codes];
+		for (let i = 0; i < numericPasteValue.length; i++) {
+			if (index + i < updatedCodes.length) {
+				updatedCodes[index + i] = numericPasteValue[i];
+			}
+		}
+
+		codes = updatedCodes.slice(0, codes.length);
+
+		const newFocusIndex = index + numericPasteValue.length - 1;
+		if (newFocusIndex < inputs.length) {
+			(inputs[newFocusIndex] as HTMLInputElement).focus();
+		}
+	}
+
+	function validateNumericInput(event: KeyboardEvent) {
+		if (
+			!/^[0-9]$/.test(event.key) &&
+			!event.ctrlKey &&
+			!['Backspace', 'ArrowLeft', 'ArrowRight'].includes(event.key)
+		) {
+			event.preventDefault();
+		}
 	}
 </script>
 
 <input
 	class={`${nostyle ? '' : 'default-input'} ${className}`}
 	bind:this={input}
-	on:keydown={keyDownHandler}
-	on:keyup={keyUpHandler}
-	on:keypress={typeHandler}
-	on:input={changeHandler}
-	on:paste={pasteHandler}
+	on:keydown={handleKeyDown}
+	on:input={handleInput}
+	on:paste={handlePaste}
+	on:keypress={validateNumericInput}
+	inputmode="numeric"
+	pattern="[0-9]*"
 	{style}
 	{value}
 	{placeholder}
