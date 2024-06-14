@@ -10,7 +10,7 @@ You can also change the number of inputs through the `numOfInputs` prop.
 <script>
 	import SvelteOtp from ‘svelte-num-otp’;
 
-    let value = '12345'
+  let value = '12345'
 
 </script>
 
