@@ -23,11 +23,7 @@
 				/>
 			</svg>
 		</a>
-		<a
-			href="https://www.npmjs.com/package/svelte-num-otp"
-			target="_blank"
-			rel="noreferrer"
-		>
+		<a href="https://www.npmjs.com/package/svelte-num-otp" target="_blank" rel="noreferrer">
 			<svg
 				width="24"
 				height="24"
