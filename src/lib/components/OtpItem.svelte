@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	export let input: null | HTMLInputElement = null;
 	export let index: number;
 	export let value: string;
@@ -99,6 +101,12 @@
 			event.preventDefault();
 		}
 	}
+
+	onMount(() => {
+		if (index === 0) {
+			input?.focus();
+		}
+	});
 </script>
 
 <input
