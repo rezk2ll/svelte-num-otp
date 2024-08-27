@@ -104,7 +104,9 @@
 
 	onMount(() => {
 		if (index === 0) {
-			input?.focus();
+			setTimeout(() => {
+				input?.focus();
+			}, 250);
 		}
 	});
 </script>
