@@ -1,23 +1,35 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	interface Props {
+		input?: HTMLInputElement | null;
+		index: number;
+		value: string;
+		codes: string[];
+		inputs: (HTMLInputElement | null)[];
+		nostyle: boolean;
+		className: string;
+		style: string;
+		placeholder: string;
+	}
 
-	export let input: null | HTMLInputElement = null;
-	export let index: number;
-	export let value: string;
-	export let codes: string[];
-	export let inputs: (null | HTMLInputElement)[];
-	export let nostyle: boolean;
-	export let className: string;
-	export let style: string;
-	export let placeholder: string;
+	let {
+		input = $bindable(null),
+		index,
+		value = $bindable(),
+		codes = $bindable(),
+		inputs,
+		nostyle,
+		className,
+		style,
+		placeholder
+	}: Props = $props();
 
 	function shiftFocus(forward = true) {
 		if (forward) {
-			if (index < inputs.length - 1) {
+			if (index < inputs.length - 1 && inputs[index + 1]) {
 				(inputs[index + 1] as HTMLInputElement).focus();
 			}
 		} else {
-			if (index > 0) {
+			if (index > 0 && inputs[index - 1]) {
 				(inputs[index - 1] as HTMLInputElement).focus();
 			}
 		}
@@ -28,9 +40,9 @@
 			event.preventDefault();
 		}
 
-		if (event.key === 'ArrowRight' && index < inputs.length - 1) {
+		if (event.key === 'ArrowRight' && index < inputs.length - 1 && inputs[index + 1]) {
 			(inputs[index + 1] as HTMLInputElement).focus();
-		} else if (event.key === 'ArrowLeft' && index > 0) {
+		} else if (event.key === 'ArrowLeft' && index > 0 && inputs[index - 1]) {
 			(inputs[index - 1] as HTMLInputElement).focus();
 		} else if (event.key === 'Backspace' && value === '') {
 			shiftFocus(false);
@@ -41,33 +53,21 @@
 		const target = event.target as HTMLInputElement;
 		const inputValue = target.value.replace(/[^0-9]/g, '');
 
-		if (target.value !== inputValue) {
-			target.value = inputValue;
-		}
-
 		if (inputValue.length > 0) {
-			codes = codes.map((code, i) => {
-				if (i < index) {
-					return code === '' ? ' ' : code;
-				} else if (i === index) {
-					return inputValue[0];
-				}
-				return code;
-			});
-
-			if (inputValue.length >= 1) {
-				shiftFocus();
-			}
-		}
-
-		if (!inputValue) {
-			const length = codes.length;
-			const filteredCodes = codes.filter((_, i) => i !== index);
-			codes = [...filteredCodes, ...Array(length - filteredCodes.length).fill('')];
-		}
-
-		if (index === inputs.length - 1 && inputValue.length > 1) {
-			target.value = inputValue[0];
+			const newValue = inputValue[0];
+			value = newValue;
+			// Trigger reactivity by creating new array
+			const newCodes = [...codes];
+			newCodes[index] = newValue;
+			codes = newCodes;
+			// Clear extra characters and shift focus
+			target.value = newValue;
+			setTimeout(() => shiftFocus(), 0);
+		} else {
+			value = '';
+			const newCodes = [...codes];
+			newCodes[index] = '';
+			codes = newCodes;
 		}
 	}
 
@@ -77,19 +77,25 @@
 		if (!paste) return;
 
 		const numericPasteValue = paste.replace(/[^0-9]/g, '').slice(0, codes.length - index);
-		const updatedCodes = [...codes];
-		for (let i = 0; i < numericPasteValue.length; i++) {
-			if (index + i < updatedCodes.length) {
-				updatedCodes[index + i] = numericPasteValue[i];
+		
+		// Update current input
+		if (numericPasteValue.length > 0) {
+			value = numericPasteValue[0];
+		}
+
+		// Update subsequent inputs
+		for (let i = 1; i < numericPasteValue.length; i++) {
+			if (index + i < codes.length) {
+				codes[index + i] = numericPasteValue[i];
 			}
 		}
 
-		codes = updatedCodes.slice(0, codes.length);
-
-		const newFocusIndex = index + numericPasteValue.length - 1;
-		if (newFocusIndex < inputs.length) {
-			(inputs[newFocusIndex] as HTMLInputElement).focus();
-		}
+		const newFocusIndex = Math.min(index + numericPasteValue.length, inputs.length - 1);
+		setTimeout(() => {
+			if (newFocusIndex >= 0 && newFocusIndex < inputs.length && inputs[newFocusIndex]) {
+				(inputs[newFocusIndex] as HTMLInputElement).focus();
+			}
+		}, 0);
 	}
 
 	function validateNumericInput(event: KeyboardEvent) {
@@ -102,7 +108,7 @@
 		}
 	}
 
-	onMount(() => {
+	$effect(() => {
 		if (index === 0) {
 			setTimeout(() => {
 				input?.focus();
@@ -114,10 +120,10 @@
 <input
 	class={`${nostyle ? '' : 'default-input'} ${className}`}
 	bind:this={input}
-	on:keydown={handleKeyDown}
-	on:input={handleInput}
-	on:paste={handlePaste}
-	on:keypress={validateNumericInput}
+	onkeydown={handleKeyDown}
+	oninput={handleInput}
+	onpaste={handlePaste}
+	onkeypress={validateNumericInput}
 	inputmode="numeric"
 	pattern="[0-9]*"
 	{style}

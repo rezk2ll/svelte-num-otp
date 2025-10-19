@@ -1,46 +1,80 @@
 <script lang="ts">
-	import { afterUpdate } from 'svelte';
 	import OtpItem from './OtpItem.svelte';
 
-	export let numOfInputs = 6;
-	export let value = '';
-	export let separator = '';
-	export let disableDefaultStyle = false;
-	export let inputClass = '';
-	export let wrapperClass = '';
-	export let separatorClass = '';
-	export let inputStyle = '';
-	export let wrapperStyle = '';
-	export let separatorStyle = '';
-	export let placeholder = '';
-	export let onlyShowMiddleSeparator = false;
+	interface Props {
+		numOfInputs?: number;
+		value?: string;
+		separator?: string;
+		disableDefaultStyle?: boolean;
+		inputClass?: string;
+		wrapperClass?: string;
+		separatorClass?: string;
+		inputStyle?: string;
+		wrapperStyle?: string;
+		separatorStyle?: string;
+		placeholder?: string;
+		onlyShowMiddleSeparator?: boolean;
+	}
 
-	let codes: string[] = [
-		...value.slice(0, numOfInputs).split(''),
-		...Array(numOfInputs <= value.length ? 0 : numOfInputs - value.length).fill('')
-	];
-	let inputs: (null | HTMLInputElement)[] = Array(numOfInputs).fill(null);
+	let {
+		numOfInputs = 6,
+		value = $bindable(''),
+		separator = '',
+		disableDefaultStyle = false,
+		inputClass = '',
+		wrapperClass = '',
+		separatorClass = '',
+		inputStyle = '',
+		wrapperStyle = '',
+		separatorStyle = '',
+		placeholder = '',
+		onlyShowMiddleSeparator = false
+	}: Props = $props();
 
-	afterUpdate(() => {
-		codes = [
-			...value.slice(0, numOfInputs).split(''),
-			...Array(numOfInputs <= value.length ? 0 : numOfInputs - value.length).fill('')
-		];
+	let codes = $state<string[]>([]);
+	let inputs = $state<(HTMLInputElement | null)[]>([]);
+	let lastValue = $state('');
+
+	// Initialize
+	$effect(() => {
+		if (codes.length !== numOfInputs) {
+			codes = Array(numOfInputs).fill('');
+			inputs = Array(numOfInputs).fill(null);
+		}
 	});
 
-	$: placeholders =
+	// Sync from external value changes
+	$effect(() => {
+		if (value !== lastValue && value !== codes.join('')) {
+			lastValue = value;
+			codes = [
+				...value.slice(0, numOfInputs).split(''),
+				...Array(Math.max(0, numOfInputs - value.length)).fill('')
+			];
+		}
+	});
+
+	// Sync to parent value
+	$effect(() => {
+		const newValue = codes.join('');
+		if (newValue !== value) {
+			lastValue = newValue;
+			value = newValue;
+		}
+	});
+
+	const placeholders = $derived(
 		placeholder.length < numOfInputs
 			? [...placeholder.split(''), ...Array(numOfInputs - placeholder.length).fill('')]
-			: placeholder.split('');
-
-	$: value = codes.join('');
+			: placeholder.split('')
+	);
 </script>
 
 <div class={`${disableDefaultStyle ? '' : 'wrapper'} ${wrapperClass}`} style={wrapperStyle}>
-	{#each codes as value, i (i)}
+	{#each codes as _, i (i)}
 		<OtpItem
 			bind:input={inputs[i]}
-			bind:value
+			bind:value={codes[i]}
 			index={i}
 			bind:codes
 			{inputs}
