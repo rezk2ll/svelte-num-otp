@@ -1,21 +1,35 @@
 # svelte-otp
 
-A simple lightweight numbers OTP input component for svelte.
+A simple lightweight numbers OTP input component for Svelte.
 
 [original project](https://github.com/K4UNG/svelte-otp)
+
+> **⚠️ Version Notice:**
+> - **v0.1.x**: Supports Svelte 4 (deprecated)
+> - **v1.0.0+**: Requires Svelte 5 (current)
+
+## Requirements
+
+- Svelte 5.0.0 or higher
+- SvelteKit 2.0.0 or higher (if using SvelteKit)
 
 <br/>
 
 # Installing
 
-```
-npm install svelte-num-otp
+```bash
+npm install svelte-num-otp@latest
 ```
 
 or
 
+```bash
+yarn add svelte-num-otp@latest
 ```
-yarn add svelte-num-otp
+
+**For Svelte 4 users (deprecated):**
+```bash
+npm install svelte-num-otp@0.1.5
 ```
 
 <br/>
