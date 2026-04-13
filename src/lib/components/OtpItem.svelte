@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { tick } from 'svelte';
+
 	interface Props {
 		input?: HTMLInputElement | null;
 		index: number;
@@ -49,53 +51,44 @@
 		}
 	}
 
+	async function distributeDigits(digits: string) {
+		const slice = digits.replace(/[^0-9]/g, '').slice(0, codes.length - index);
+		if (slice.length === 0) return;
+
+		const newCodes = [...codes];
+		for (let i = 0; i < slice.length; i++) {
+			newCodes[index + i] = slice[i];
+		}
+		codes = newCodes;
+		value = slice[0];
+
+		const focusAt = Math.min(index + slice.length, inputs.length - 1);
+		await tick();
+		inputs[focusAt]?.focus();
+	}
+
 	function handleInput(event: Event) {
+		// Mobile browsers fire `input` (not `paste`) when pasting, so this path must also
+		// distribute multi-char values across subsequent inputs.
 		const target = event.target as HTMLInputElement;
 		const inputValue = target.value.replace(/[^0-9]/g, '');
 
-		if (inputValue.length > 0) {
-			const newValue = inputValue[0];
-			value = newValue;
-			// Trigger reactivity by creating new array
-			const newCodes = [...codes];
-			newCodes[index] = newValue;
-			codes = newCodes;
-			// Clear extra characters and shift focus
-			target.value = newValue;
-			setTimeout(() => shiftFocus(), 0);
-		} else {
+		if (inputValue.length === 0) {
 			value = '';
 			const newCodes = [...codes];
 			newCodes[index] = '';
 			codes = newCodes;
+			return;
 		}
+
+		distributeDigits(inputValue);
 	}
 
 	function handlePaste(event: ClipboardEvent) {
 		event.preventDefault();
 		const paste = event.clipboardData?.getData('text');
 		if (!paste) return;
-
-		const numericPasteValue = paste.replace(/[^0-9]/g, '').slice(0, codes.length - index);
-		
-		// Update current input
-		if (numericPasteValue.length > 0) {
-			value = numericPasteValue[0];
-		}
-
-		// Update subsequent inputs
-		for (let i = 1; i < numericPasteValue.length; i++) {
-			if (index + i < codes.length) {
-				codes[index + i] = numericPasteValue[i];
-			}
-		}
-
-		const newFocusIndex = Math.min(index + numericPasteValue.length, inputs.length - 1);
-		setTimeout(() => {
-			if (newFocusIndex >= 0 && newFocusIndex < inputs.length && inputs[newFocusIndex]) {
-				(inputs[newFocusIndex] as HTMLInputElement).focus();
-			}
-		}, 0);
+		distributeDigits(paste);
 	}
 
 	function validateNumericInput(event: KeyboardEvent) {
