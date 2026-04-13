@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, fireEvent } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect } from 'vitest';
 import SvelteOtp from './SvelteOtp.svelte';
@@ -54,6 +54,36 @@ describe('SvelteOtp', () => {
 		expect(inputs[2].value).toBe('3');
 		expect(inputs[3].value).toBe('4');
 		expect(inputs[4].value).toBe('5');
+		expect(inputs[5].value).toBe('6');
+	});
+
+	it('should distribute multi-char input when pasted on mobile (input event without paste event)', async () => {
+		render(SvelteOtp);
+		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+
+		inputs[0].focus();
+		await fireEvent.input(inputs[0], { target: { value: '123456' } });
+
+		expect(inputs[0].value).toBe('1');
+		expect(inputs[1].value).toBe('2');
+		expect(inputs[2].value).toBe('3');
+		expect(inputs[3].value).toBe('4');
+		expect(inputs[4].value).toBe('5');
+		expect(inputs[5].value).toBe('6');
+	});
+
+	it('should distribute multi-char input starting from a middle input', async () => {
+		render(SvelteOtp);
+		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+
+		inputs[2].focus();
+		await fireEvent.input(inputs[2], { target: { value: '9876' } });
+
+		expect(inputs[0].value).toBe('');
+		expect(inputs[1].value).toBe('');
+		expect(inputs[2].value).toBe('9');
+		expect(inputs[3].value).toBe('8');
+		expect(inputs[4].value).toBe('7');
 		expect(inputs[5].value).toBe('6');
 	});
 
