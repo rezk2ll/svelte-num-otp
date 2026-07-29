@@ -11,6 +11,8 @@
 		className: string;
 		style: string;
 		placeholder: string;
+		autocomplete: AutoFill;
+		ariaLabel: string;
 	}
 
 	let {
@@ -22,7 +24,9 @@
 		nostyle,
 		className,
 		style,
-		placeholder
+		placeholder,
+		autocomplete,
+		ariaLabel
 	}: Props = $props();
 
 	function shiftFocus(forward = true) {
@@ -119,6 +123,8 @@
 	onkeypress={validateNumericInput}
 	inputmode="numeric"
 	pattern="[0-9]*"
+	{autocomplete}
+	aria-label={ariaLabel}
 	{style}
 	{value}
 	{placeholder}

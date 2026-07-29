@@ -14,6 +14,8 @@
 		separatorStyle?: string;
 		placeholder?: string;
 		onlyShowMiddleSeparator?: boolean;
+		autocomplete?: AutoFill;
+		ariaLabel?: (index: number, total: number) => string;
 	}
 
 	let {
@@ -28,7 +30,11 @@
 		wrapperStyle = '',
 		separatorStyle = '',
 		placeholder = '',
-		onlyShowMiddleSeparator = false
+		onlyShowMiddleSeparator = false,
+		// iOS and Android only offer a received code when every input asks for it.
+		// Marking just the first fills that one box and leaves the rest empty.
+		autocomplete = 'one-time-code',
+		ariaLabel = (index, total) => `Digit ${index} of ${total}`
 	}: Props = $props();
 
 	let codes = $state<string[]>([]);
@@ -82,6 +88,8 @@
 			className={inputClass}
 			style={inputStyle}
 			placeholder={placeholders[i]}
+			{autocomplete}
+			ariaLabel={ariaLabel(i + 1, numOfInputs)}
 		/>
 		{#if separator && i !== codes.length - 1 && (!onlyShowMiddleSeparator || (onlyShowMiddleSeparator && i === codes.length / 2 - 1 && numOfInputs % 2 === 0))}
 			<span class={separatorClass} style={separatorStyle}>{separator}</span>

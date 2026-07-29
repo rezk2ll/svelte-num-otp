@@ -22,7 +22,7 @@ describe('SvelteOtp', () => {
 		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
 
 		await user.type(inputs[0], '1');
-		
+
 		// Check that focus moved to second input
 		expect(document.activeElement).toBe(inputs[1]);
 	});
@@ -98,5 +98,46 @@ describe('SvelteOtp', () => {
 		expect(inputs[0].value).toBe('1');
 		expect(inputs[1].value).toBe('2');
 		expect(inputs[2].value).toBe('3');
+	});
+
+	it('should ask every input for the one-time code', () => {
+		render(SvelteOtp);
+		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+
+		// Every one of them, not just the first: Safari fills a single box when
+		// the others opt out.
+		expect(inputs.map((input) => input.getAttribute('autocomplete'))).toEqual(
+			Array(6).fill('one-time-code')
+		);
+	});
+
+	it('should let the autocomplete be overridden', () => {
+		render(SvelteOtp, { autocomplete: 'off' });
+		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+
+		expect(inputs.map((input) => input.getAttribute('autocomplete'))).toEqual(Array(6).fill('off'));
+	});
+
+	it('should give each input a distinct accessible name', () => {
+		render(SvelteOtp, { numOfInputs: 4 });
+		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+
+		expect(inputs.map((input) => input.getAttribute('aria-label'))).toEqual([
+			'Digit 1 of 4',
+			'Digit 2 of 4',
+			'Digit 3 of 4',
+			'Digit 4 of 4'
+		]);
+	});
+
+	it('should let the accessible name be translated', () => {
+		render(SvelteOtp, {
+			numOfInputs: 3,
+			ariaLabel: (index: number, total: number) => `Chiffre ${index} sur ${total}`
+		});
+
+		expect(screen.getByLabelText('Chiffre 2 sur 3')).toBe(
+			(screen.getAllByRole('textbox') as HTMLInputElement[])[1]
+		);
 	});
 });
