@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.0] - 2026-07-29
+
+**New Features:**
+
+- `autocomplete` prop, defaulting to `one-time-code`, set on every input. iOS distributes a received code across separate fields only when each one asks for it, so SMS autofill now works without the consumer patching the DOM.
+- `ariaLabel` prop building each input's accessible name, defaulting to `Digit {i} of {n}`. Pass a function to translate it.
+
+Both are additive and default to the common case, so upgrading needs no changes. Inputs that previously rendered with no `autocomplete` and no accessible name now carry both.
+
+---
+
 ## [1.0.0] - 2025-01-19
 
 ### 🎉 Major Release - Svelte 5 Support
