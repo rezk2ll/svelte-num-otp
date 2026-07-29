@@ -93,6 +93,8 @@ Here's an example component, styled using [tailwindcss](https://tailwindcss.com/
 | separator               | ''                | Separator between the individual inputs                     |
 | onlyShowMiddleSeparator | false             | Only show one separator in the middle (numOfInputs % 2 = 0) |
 | placeholder             | ''                | Placeholder value for the inputs                            |
+| autocomplete            | 'one-time-code'   | autocomplete attribute set on every input                   |
+| ariaLabel               | Digit {i} of {n}  | Builds each input's accessible name, for translation        |
 | disableDefaultStyle     | false             | Disable default styling of component                        |
 | wrapperClass            | ''                | Custom class to be added to the wrapper element             |
 | inputClass              | ''                | Custom class to be added to the individual inputs           |
