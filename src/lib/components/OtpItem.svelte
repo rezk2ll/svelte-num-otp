@@ -13,6 +13,7 @@
 		placeholder: string;
 		autocomplete: AutoFill;
 		ariaLabel: string;
+		autofocus: boolean;
 	}
 
 	let {
@@ -26,7 +27,8 @@
 		style,
 		placeholder,
 		autocomplete,
-		ariaLabel
+		ariaLabel,
+		autofocus
 	}: Props = $props();
 
 	function shiftFocus(forward = true) {
@@ -106,11 +108,13 @@
 	}
 
 	$effect(() => {
-		if (index === 0) {
-			setTimeout(() => {
-				input?.focus();
-			}, 250);
-		}
+		if (!autofocus || index !== 0) return;
+
+		const timer = setTimeout(() => input?.focus(), 250);
+
+		// Cancelling matters when `autofocus` is bound to state: a wizard step that closes
+		// inside the delay would otherwise pull the caret back out of wherever it moved to.
+		return () => clearTimeout(timer);
 	});
 </script>
 

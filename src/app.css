@@ -2,61 +2,169 @@
 @tailwind components;
 @tailwind utilities;
 
-button,
-a {
-	-webkit-tap-highlight-color: transparent;
+@layer base {
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 240 10% 3.9%;
+		--card: 0 0% 100%;
+		--card-foreground: 240 10% 3.9%;
+		--muted: 240 4.8% 95.9%;
+		--muted-foreground: 240 3.8% 46.1%;
+		--border: 240 5.9% 90%;
+		--input: 240 5.9% 86%;
+		--ring: 240 5.9% 10%;
+		--primary: 240 5.9% 10%;
+		--primary-foreground: 0 0% 98%;
+		--accent: 240 4.8% 95.9%;
+		--accent-foreground: 240 5.9% 10%;
+		--success: 142 71% 33%;
+		--warn: 32 90% 40%;
+		--danger: 0 72% 45%;
+		--radius: 0.625rem;
+
+		--code-keyword: 265 58% 46%;
+		--code-string: 145 52% 30%;
+		--code-number: 25 78% 40%;
+		--code-comment: 240 4% 55%;
+		--code-function: 219 68% 45%;
+		--code-tag: 340 62% 45%;
+		--code-attr: 197 60% 34%;
+	}
+
+	.dark {
+		--background: 240 10% 3.9%;
+		--foreground: 0 0% 98%;
+		--card: 240 7% 7%;
+		--card-foreground: 0 0% 98%;
+		--muted: 240 4% 13%;
+		--muted-foreground: 240 5% 65%;
+		--border: 240 4% 17%;
+		--input: 240 4% 24%;
+		--ring: 240 5% 70%;
+		--primary: 0 0% 98%;
+		--primary-foreground: 240 5.9% 10%;
+		--accent: 240 4% 15%;
+		--accent-foreground: 0 0% 98%;
+		--success: 142 66% 55%;
+		--warn: 38 92% 62%;
+		--danger: 0 84% 68%;
+
+		--code-keyword: 265 85% 78%;
+		--code-string: 145 50% 68%;
+		--code-number: 25 88% 70%;
+		--code-comment: 240 5% 52%;
+		--code-function: 215 88% 74%;
+		--code-tag: 340 78% 72%;
+		--code-attr: 190 68% 66%;
+	}
+
+	* {
+		@apply border-border;
+	}
+
+	html {
+		scroll-behavior: smooth;
+		/* The only anchor offset on the page: the 3.5rem header plus breathing room. Adding
+		   scroll-margin to the sections as well would stack on top of this, not replace it. */
+		scroll-padding-top: 5.5rem;
+	}
+
+	body {
+		@apply bg-background text-foreground;
+		font-feature-settings:
+			'rlig' 1,
+			'calt' 1;
+	}
+
+	button,
+	a {
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	:focus-visible {
+		@apply outline-none ring-2 ring-ring/60 ring-offset-2 ring-offset-background;
+	}
 }
 
-@layer base {
-	.content a {
-		@apply text-blue-600 underline;
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
 	}
 
-	.content h1 {
-		@apply text-3xl font-semibold mb-4;
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+@layer components {
+	/* The faint field the hero sits on. Fades out downward so the docs below stay flat. */
+	.dot-field {
+		background-image: radial-gradient(hsl(var(--border)) 1px, transparent 1px);
+		background-size: 20px 20px;
+		mask-image: radial-gradient(70% 65% at 50% 0%, #000 0%, transparent 100%);
+		-webkit-mask-image: radial-gradient(70% 65% at 50% 0%, #000 0%, transparent 100%);
 	}
 
-	.content h2 {
-		@apply text-2xl font-semibold mt-4 mb-2;
+	.eyebrow {
+		@apply font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-muted-foreground;
 	}
+}
 
-	.content pre {
-		@apply bg-gray-100 rounded-lg px-2 inline-block w-full  text-sm;
-	}
+/* Theme-aware syntax highlighting so code follows light and dark automatically. */
+.hljs-comment,
+.hljs-quote {
+	color: hsl(var(--code-comment));
+	font-style: italic;
+}
 
-	.content pre code {
-		@apply bg-gray-100;
-	}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-type {
+	color: hsl(var(--code-keyword));
+}
 
-	.content p {
-		@apply my-4;
-	}
+.hljs-string,
+.hljs-meta .hljs-string,
+.hljs-regexp {
+	color: hsl(var(--code-string));
+}
 
-	.content hr {
-		@apply py-4;
-	}
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet {
+	color: hsl(var(--code-number));
+}
 
-	.content p code {
-		@apply bg-gray-100 text-gray-700 rounded-md p-1;
-	}
+.hljs-title,
+.hljs-title.function_,
+.hljs-section {
+	color: hsl(var(--code-function));
+}
 
-	.content table {
-		@apply text-sm text-left text-gray-500 border;
-	}
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+	color: hsl(var(--code-tag));
+}
 
-	.content thead {
-		@apply text-xs text-gray-700 uppercase bg-gray-50;
-	}
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-property {
+	color: hsl(var(--code-attr));
+}
 
-	.content th {
-		@apply px-6 py-3;
-	}
+.hljs-emphasis {
+	font-style: italic;
+}
 
-	.content td {
-		@apply px-6 py-4;
-	}
-
-	.content tr {
-		@apply bg-gray-50 border-b;
-	}
+.hljs-strong {
+	font-weight: 600;
 }
