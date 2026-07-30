@@ -4,9 +4,33 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
+		<!-- Set from script rather than with a prefers-color-scheme media attribute: the theme
+		     is a stored choice, so a media-gated value paints the address bar to match the OS
+		     while the page is showing the opposite. -->
+		<meta name="theme-color" content="#ffffff" />
+		<script>
+			// Applied before first paint so a dark-mode reload never flashes light.
+			(function () {
+				var dark = false;
+				try {
+					var stored = localStorage.getItem('theme');
+					dark = stored
+						? stored === 'dark'
+						: window.matchMedia('(prefers-color-scheme: dark)').matches;
+				} catch (e) {
+					// Private mode can throw on localStorage; fall back to light.
+				}
+				window.__applyTheme = function (isDark) {
+					document.documentElement.classList.toggle('dark', isDark);
+					var meta = document.querySelector('meta[name="theme-color"]');
+					if (meta) meta.setAttribute('content', isDark ? '#09090b' : '#ffffff');
+				};
+				window.__applyTheme(dark);
+			})();
+		</script>
 		%sveltekit.head%
 	</head>
-	<body data-sveltekit-preload-data="hover">
+	<body data-sveltekit-preload-data="hover" class="bg-background text-foreground antialiased">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

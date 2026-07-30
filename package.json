@@ -60,7 +60,6 @@
 	"dependencies": {
 		"@sveltejs/package": "^2.3.7",
 		"highlight.js": "^11.10.0",
-		"marked": "^15.0.3",
 		"svelte": "^5.15.0"
 	},
 	"keywords": [

@@ -1,55 +1,77 @@
 <script lang="ts">
 	import '../app.css';
+	import ThemeToggle from '../components/ThemeToggle.svelte';
+
+	let { children } = $props();
 </script>
 
-<nav
-	class="p-4 border-b border-gray-400 flex items-center justify-between bg-white z-30 sticky top-0"
->
-	<a href="/usage" class="font-semibold text-xl"
-		>svelte-<span class="text-blue-600">num-otp</span></a
+<div class="flex min-h-screen flex-col">
+	<header
+		class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/65"
 	>
-	<div class="hidden items-center space-x-4 md:flex">
-		<a href="https://github.com/rezk2ll/svelte-num-otp" target="_blank" rel="noreferrer">
-			<svg
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				xmlns="http://www.w3.org/2000/svg"
+		<div class="mx-auto flex h-14 max-w-shell items-center justify-between gap-4 px-4 sm:px-8">
+			<a href="/" class="flex items-center gap-2.5">
+				<span
+					class="flex h-6 w-6 items-center justify-center rounded-md border border-border font-mono text-[0.625rem] font-semibold"
+					aria-hidden="true"
+				>
+					6
+				</span>
+				<span class="font-mono text-sm font-medium tracking-tight">
+					svelte-<span class="text-muted-foreground">num</span>-otp
+				</span>
+			</a>
+
+			<nav class="flex items-center gap-1">
+				<a
+					href="https://www.npmjs.com/package/svelte-num-otp"
+					target="_blank"
+					rel="noreferrer"
+					aria-label="svelte-num-otp on npm"
+					class="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+				>
+					<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+						<path
+							d="M2 4v16h6.5v-2.5H12V20h10V4H2Zm4.5 3H9v9H7.5V9.5H6V16H4V7h2.5Zm5 0H17v9h-2.5v-6.5H13V16h-1.5V7Zm7 0H20v9h-1.5V7Z"
+						/>
+					</svg>
+				</a>
+				<a
+					href="https://github.com/rezk2ll/svelte-num-otp"
+					target="_blank"
+					rel="noreferrer"
+					aria-label="svelte-num-otp on GitHub"
+					class="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+				>
+					<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+						<path
+							d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48v-1.69c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.6 9.6 0 0 1 12 6.8c.85 0 1.71.11 2.51.33 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0 0 22 12c0-5.52-4.48-10-10-10Z"
+						/>
+					</svg>
+				</a>
+				<div class="mx-1 h-5 w-px bg-border" aria-hidden="true"></div>
+				<ThemeToggle />
+			</nav>
+		</div>
+	</header>
+
+	<main class="flex-1">
+		{@render children()}
+	</main>
+
+	<footer class="border-t border-border">
+		<div
+			class="mx-auto flex max-w-shell flex-col items-center justify-between gap-2 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:px-8"
+		>
+			<p>MIT licensed. Built with Svelte 5.</p>
+			<a
+				href="https://github.com/rezk2ll/svelte-num-otp/issues"
+				target="_blank"
+				rel="noreferrer"
+				class="underline underline-offset-4 transition-colors hover:text-foreground"
 			>
-				<path
-					d="M12 2C10.6868 2 9.38642 2.25866 8.17317 2.7612C6.95991 3.26375 5.85752 4.00035 4.92893 4.92893C3.05357 6.8043 2 9.34784 2 12C2 16.42 4.87 20.17 8.84 21.5C9.34 21.58 9.5 21.27 9.5 21V19.31C6.73 19.91 6.14 17.97 6.14 17.97C5.68 16.81 5.03 16.5 5.03 16.5C4.12 15.88 5.1 15.9 5.1 15.9C6.1 15.97 6.63 16.93 6.63 16.93C7.5 18.45 8.97 18 9.54 17.76C9.63 17.11 9.89 16.67 10.17 16.42C7.95 16.17 5.62 15.31 5.62 11.5C5.62 10.39 6 9.5 6.65 8.79C6.55 8.54 6.2 7.5 6.75 6.15C6.75 6.15 7.59 5.88 9.5 7.17C10.29 6.95 11.15 6.84 12 6.84C12.85 6.84 13.71 6.95 14.5 7.17C16.41 5.88 17.25 6.15 17.25 6.15C17.8 7.5 17.45 8.54 17.35 8.79C18 9.5 18.38 10.39 18.38 11.5C18.38 15.32 16.04 16.16 13.81 16.41C14.17 16.72 14.5 17.33 14.5 18.26V21C14.5 21.27 14.66 21.59 15.17 21.5C19.14 20.16 22 16.42 22 12C22 10.6868 21.7413 9.38642 21.2388 8.17317C20.7362 6.95991 19.9997 5.85752 19.0711 4.92893C18.1425 4.00035 17.0401 3.26375 15.8268 2.7612C14.6136 2.25866 13.3132 2 12 2Z"
-					fill="black"
-				/>
-			</svg>
-		</a>
-		<a href="https://www.npmjs.com/package/svelte-num-otp" target="_blank" rel="noreferrer">
-			<svg
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<path
-					d="M7.5 15V17H11V15H23V8H1V15H7.5ZM7.5 15V8M13.5 8V15"
-					stroke="black"
-					stroke-width="1.5"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				/>
-				<path
-					d="M18 11V15M5 11V15M11 11V12M20.5 11V15"
-					stroke="black"
-					stroke-width="1.5"
-					stroke-linecap="round"
-				/>
-			</svg>
-		</a>
-	</div>
-</nav>
-<div class="md:grid grid-cols-6 md:px-10">
-	<div class="col-span-5">
-		<slot />
-	</div>
+				Report an issue
+			</a>
+		</div>
+	</footer>
 </div>

@@ -7,6 +7,11 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
+
+	interface Window {
+		/** Defined by the pre-paint theme script in app.html. */
+		__applyTheme?: (dark: boolean) => void;
+	}
 }
 
 export {};

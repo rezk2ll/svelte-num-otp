@@ -18,7 +18,8 @@ describe('SvelteOtp', () => {
 
 	it('should automatically focus next input when typing a digit', async () => {
 		const user = userEvent.setup();
-		render(SvelteOtp);
+		// autofocus off, or the 250ms mount timer races the assertion and pulls focus back.
+		render(SvelteOtp, { autofocus: false });
 		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
 
 		await user.type(inputs[0], '1');
@@ -89,7 +90,7 @@ describe('SvelteOtp', () => {
 
 	it('should only accept numeric values', async () => {
 		const user = userEvent.setup();
-		render(SvelteOtp);
+		render(SvelteOtp, { autofocus: false });
 		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
 
 		await user.type(inputs[0], 'abc123');
@@ -139,5 +140,30 @@ describe('SvelteOtp', () => {
 		expect(screen.getByLabelText('Chiffre 2 sur 3')).toBe(
 			(screen.getAllByRole('textbox') as HTMLInputElement[])[1]
 		);
+	});
+
+	it('should spread an initial value across the inputs', () => {
+		render(SvelteOtp, { value: '12345' });
+		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+
+		expect(inputs.map((input) => input.value)).toEqual(['1', '2', '3', '4', '5', '']);
+	});
+
+	it('should focus the first input on mount by default', async () => {
+		render(SvelteOtp);
+		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+
+		await new Promise((resolve) => setTimeout(resolve, 400));
+
+		expect(document.activeElement).toBe(inputs[0]);
+	});
+
+	it('should leave focus alone when autofocus is off', async () => {
+		render(SvelteOtp, { autofocus: false });
+		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+
+		await new Promise((resolve) => setTimeout(resolve, 400));
+
+		expect(document.activeElement).not.toBe(inputs[0]);
 	});
 });
