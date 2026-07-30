@@ -56,7 +56,6 @@
 	let codes = $state<string[]>(spread(value, numOfInputs));
 	// svelte-ignore state_referenced_locally
 	let inputs = $state<(HTMLInputElement | null)[]>(Array(numOfInputs).fill(null));
-	// svelte-ignore state_referenced_locally
 	let lastValue = $state(value);
 
 	// Resize when numOfInputs changes

@@ -17,6 +17,10 @@
 
 	let { code, lang = 'xml' }: Props = $props();
 
+	/* eslint-disable svelte/no-at-html-tags --
+	   The markup rendered below comes from hljs.highlight, which escapes the source before
+	   wrapping it in spans. Every caller passes a string literal written in this repo, so
+	   there is no user input anywhere in the path. */
 	const highlighted = $derived(hljs.highlight(code, { language: lang }).value);
 </script>
 

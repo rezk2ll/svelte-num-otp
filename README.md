@@ -5,6 +5,7 @@ A simple lightweight numbers OTP input component for Svelte.
 [original project](https://github.com/K4UNG/svelte-otp)
 
 > **⚠️ Version Notice:**
+>
 > - **v0.1.x**: Supports Svelte 4 (deprecated)
 > - **v1.0.0+**: Requires Svelte 5 (current)
 
@@ -28,6 +29,7 @@ yarn add svelte-num-otp@latest
 ```
 
 **For Svelte 4 users (deprecated):**
+
 ```bash
 npm install svelte-num-otp@0.1.5
 ```
