@@ -73,13 +73,25 @@
 		inputs[focusAt]?.focus();
 	}
 
-	function handleInput(event: Event) {
-		// Mobile browsers fire `input` (not `paste`) when pasting, so this path must also
-		// distribute multi-char values across subsequent inputs.
-		const target = event.target as HTMLInputElement;
-		const inputValue = target.value.replace(/[^0-9]/g, '');
+	async function replaceDigit(target: HTMLInputElement, digit: string) {
+		const newCodes = [...codes];
+		newCodes[index] = digit;
+		codes = newCodes;
+		value = digit;
 
-		if (inputValue.length === 0) {
+		await tick();
+		// `value` is set as a one way attribute, so retyping the digit a box already holds
+		// changes no state and re-renders nothing, leaving the browser's two character
+		// string sitting in the box.
+		if (target.value !== digit) target.value = digit;
+		shiftFocus();
+	}
+
+	function handleInput(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const digits = target.value.replace(/[^0-9]/g, '');
+
+		if (digits.length === 0) {
 			value = '';
 			const newCodes = [...codes];
 			newCodes[index] = '';
@@ -87,7 +99,28 @@
 			return;
 		}
 
-		distributeDigits(inputValue);
+		// A single typed character belongs to this box alone. When the box already holds a
+		// digit the browser reports both, and spreading that pair would push the old digit's
+		// neighbour out and corrupt the code.
+		const existing = codes[index] ?? '';
+		const typed = (event as InputEvent).data?.replace(/[^0-9]/g, '') ?? '';
+		const replacement =
+			typed.length === 1
+				? typed
+				: existing && digits.length === 2
+					? digits[0] === existing
+						? digits[1]
+						: digits[0]
+					: '';
+
+		if (replacement) {
+			replaceDigit(target, replacement);
+			return;
+		}
+
+		// Mobile browsers fire `input` (not `paste`) when pasting, so this path must also
+		// distribute multi-char values across subsequent inputs.
+		distributeDigits(digits);
 	}
 
 	function handlePaste(event: ClipboardEvent) {

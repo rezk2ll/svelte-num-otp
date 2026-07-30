@@ -88,6 +88,39 @@ describe('SvelteOtp', () => {
 		expect(inputs[5].value).toBe('6');
 	});
 
+	it('should replace the digit in a box that already holds one', async () => {
+		const user = userEvent.setup();
+		render(SvelteOtp, { value: '123456', autofocus: false });
+		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+
+		// Caret sits after the existing digit, which is where a browser reports both the old
+		// and the new character together.
+		await user.type(inputs[0], '9', { initialSelectionStart: 1, initialSelectionEnd: 1 });
+
+		expect(inputs.map((input) => input.value)).toEqual(['9', '2', '3', '4', '5', '6']);
+	});
+
+	it('should leave one character behind when retyping the same digit', async () => {
+		const user = userEvent.setup();
+		render(SvelteOtp, { value: '123456', autofocus: false });
+		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+
+		await user.type(inputs[1], '2', { initialSelectionStart: 1, initialSelectionEnd: 1 });
+
+		expect(inputs[1].value).toBe('2');
+		expect(inputs[2].value).toBe('3');
+	});
+
+	it('should replace a middle digit without disturbing its neighbours', async () => {
+		const user = userEvent.setup();
+		render(SvelteOtp, { value: '123456', autofocus: false });
+		const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+
+		await user.type(inputs[3], '0', { initialSelectionStart: 1, initialSelectionEnd: 1 });
+
+		expect(inputs.map((input) => input.value)).toEqual(['1', '2', '3', '0', '5', '6']);
+	});
+
 	it('should only accept numeric values', async () => {
 		const user = userEvent.setup();
 		render(SvelteOtp, { autofocus: false });
