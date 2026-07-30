@@ -11,7 +11,9 @@
 
 	function toggle() {
 		dark = !dark;
-		document.documentElement.classList.toggle('dark', dark);
+		// Shared with the pre-paint script in app.html so the class and the address bar
+		// colour can never drift apart.
+		window.__applyTheme?.(dark);
 		try {
 			localStorage.setItem('theme', dark ? 'dark' : 'light');
 		} catch {

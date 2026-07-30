@@ -4,6 +4,10 @@
 
 @layer base {
 	:root {
+		/* Tells the UA which way to paint what CSS does not reach: scrollbars, form
+		   controls, and Chrome's autofill highlight over the code boxes. */
+		color-scheme: light;
+
 		--background: 0 0% 100%;
 		--foreground: 240 10% 3.9%;
 		--card: 0 0% 100%;
@@ -32,6 +36,8 @@
 	}
 
 	.dark {
+		color-scheme: dark;
+
 		--background: 240 10% 3.9%;
 		--foreground: 0 0% 98%;
 		--card: 240 7% 7%;
@@ -97,6 +103,10 @@
 		animation-duration: 0.01ms !important;
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
+		/* Delays have to go too. `rise-in` fills backwards, so a surviving delay holds the
+		   element at opacity 0 and turns the animation into a flash of missing content. */
+		animation-delay: 0.01ms !important;
+		transition-delay: 0s !important;
 	}
 }
 

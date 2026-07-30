@@ -17,12 +17,14 @@
 
 	let { children, code, status, surface = 'default' }: Props = $props();
 
-	const tabs = [
+	type Tab = 'preview' | 'code';
+
+	const tabs: { id: Tab; label: string }[] = [
 		{ id: 'preview', label: 'Preview' },
 		{ id: 'code', label: 'Code' }
 	];
 
-	let tab = $state('preview');
+	let tab = $state<Tab>('preview');
 </script>
 
 <div class="overflow-hidden rounded-xl border border-border bg-card">

@@ -26,9 +26,13 @@
 	</div>
 	<!-- tabindex makes the overflow reachable: a long line has no focusable child of its own,
 	     so without it a keyboard user cannot scroll to the end of it. The a11y rule below is
-	     the general case; a scrollable region is the documented exception to it. -->
+	     the general case; a scrollable region is the documented exception to it.
+	     The ring has to be inset: every caller wraps this in `overflow-hidden`, which would
+	     clip an offset ring away entirely and leave the focus stop invisible. -->
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-	<pre tabindex="0" class="overflow-x-auto p-4 font-mono text-[0.8125rem] leading-6"><code
+	<pre
+		tabindex="0"
+		class="overflow-x-auto p-4 font-mono text-[0.8125rem] leading-6 focus-visible:ring-inset focus-visible:ring-offset-0"><code
 			>{@html highlighted}</code
 		></pre>
 </div>

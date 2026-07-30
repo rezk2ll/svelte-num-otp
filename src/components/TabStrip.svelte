@@ -1,7 +1,7 @@
-<script lang="ts">
+<script lang="ts" generics="Id extends string">
 	interface Props {
-		items: { id: string; label: string }[];
-		active: string;
+		items: { id: Id; label: string }[];
+		active: Id;
 		/** Package manager names read better in the same face as the command under them. */
 		mono?: boolean;
 	}
