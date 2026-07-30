@@ -32,6 +32,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-vercel": "^5.10.3",
 		"@sveltejs/kit": "^2.47.1",
+		"@sveltejs/package": "^2.3.7",
 		"@sveltejs/vite-plugin-svelte": "^5.1.1",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/svelte": "^5.2.8",
@@ -45,6 +46,7 @@
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.46.0",
 		"globals": "^14.0.0",
+		"highlight.js": "^11.10.0",
 		"jsdom": "^27.0.1",
 		"postcss": "^8.5.1",
 		"prettier": "^3.4.2",
@@ -59,8 +61,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@sveltejs/package": "^2.3.7",
-		"highlight.js": "^11.10.0",
 		"svelte": "^5.15.0"
 	},
 	"keywords": [
